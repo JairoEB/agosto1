@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para una chica especial 💖</title>
+    <style>
+        
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffeef2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+        
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 107, 129, 0.2);
+            font-size: 2rem;
+            animation: heartbeat 3s infinite;
+            z-index: 0;
+        }
+
+        
+        .main-box {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 107, 129, 0.2);
+            border: 2px solid #ffccd5;
+            position: relative;
+            z-index: 10;
+            max-width: 80%;
+            transition: border-color 0.5s ease;
+        }
+
+        h1 {
+            color: #ff6b81;
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- Botones --- */
+        .buttons-area {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        #yesBtn {
+            background-color: #ff6b81;
+            color: white;
+            z-index: 11;
+        }
+        #yesBtn:hover {
+            background-color: #ff4757;
+            transform: scale(1.05);
+        }
+
+        #noBtn {
+            background-color: #f1f2f6;
+            color: #57606f;
+            position: relative;
+            z-index: 9999;
+            transition: none;
+        }
+
+        
+        #finalMessage {
+            display: none;
+            margin-top: 20px;
+            position: relative;
+        }
+
+       
+        .text-wrapper {
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(5px); 
+            padding: 30px;
+            border-radius: 20px;
+            position: relative;
+            z-index: 15; /* Siempre sobre las flores */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 192, 203, 0.5);
+        }
+
+        h2 {
+            color: #d63031; 
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #2d3436; 
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+       
+        #letterBtn {
+            background-color: #e84393;
+            color: white;
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #letterBtn:hover {
+            background-color: #d63031;
+            transform: scale(1.05);
+        }
+
+        /* --- FLORES --- */
+        .flower-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130%;
+            height: 150%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .realistic-flower {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0);
+            max-width: 250px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+        }
+
+        @keyframes flowerGrow {
+            0% { opacity: 0; transform: scale(0) rotate(-15deg); }
+            70% { opacity: 1; transform: scale(1.15) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .realistic-flower.grow {
+            animation: flowerGrow 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .fl-1 { top: -15%; left: -15%; max-width: 220px; }
+        .fl-2 { top: -20%; right: -10%; max-width: 260px; }
+        .fl-3 { bottom: -15%; left: -5%; max-width: 210px; }
+        .fl-4 { bottom: -20%; right: -15%; max-width: 240px; }
+
+        
+        .letter-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 192, 203, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .letter-modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .letter-paper {
+            background-color: #fffdf5; 
+            background-image: repeating-linear-gradient(transparent, transparent 29px, #ffccd5 29px, #ffccd5 30px); /* Líneas tipo cuaderno */
+            width: 90%;
+            max-width: 500px;
+            min-height: 350px;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+            transform: translateY(50px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .letter-modal.show .letter-paper {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #ff6b81;
+            cursor: pointer;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .close-btn:hover {
+            color: #d63031;
+        }
+
+        .letter-title {
+            font-family: 'Georgia', serif;
+            color: #d63031;
+            font-style: italic;
+            font-size: 2rem;
+            margin-top: -10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .letter-text {
+            font-size: 1.2rem;
+            line-height: 30px; 
+            color: #4a4a4a;
+            font-family: 'Georgia', serif;
+        }
+
+    </style>
+</head>
+<body>
+
+    
+    <div class="bg-heart" style="top:10%; left:10%">💖</div>
+    <div class="bg-heart" style="top:20%; right:15%; animation-delay: 1s">💖</div>
+    <div class="bg-heart" style="bottom:15%; left:20%; animation-delay: 2s">💖</div>
+    <div class="bg-heart" style="bottom:25%; right:10%; animation-delay: 0.5s">💖</div>
+
+  
+    <div class="main-box" id="container">
+        <h1 id="questionText">¿Me quieres?🥺💖</h1>
+
+        <div class="buttons-area" id="blockButtons">
+            <button class="btn" id="yesBtn">¡Sí!</button>
+            <button class="btn" id="noBtn">No</button>
+        </div>
+
+        <div id="finalMessage">
+            <div class="flower-container" id="flowerVisuals"></div>
+            
+           
+            <div class="text-wrapper">
+                <h2>¡Sabía que dirías que sí! 🥰</h2>
+                <p>Me haces muy feliz. Sabes que yo también te quiero muchísimo.</p>
+                <button class="btn" id="letterBtn">💌 Ábreme</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="letter-modal" id="letterModal">
+        <div class="letter-paper">
+            <span class="close-btn" id="closeLetter">&times;</span>
+            <div class="letter-title">Para ti, mi niña linda...</div>
+            
+            
+            <div class="letter-text">
+                He querido hacer esto porque eres alguien súper especial para mí.<br>
+                Cada momento que paso contigo o simplemente hablando, me haces sonreír.<br>
+                Solo quería recordarte lo mucho que me gustas y lo importante que eres.<br><br>
+                <b>Y</b>o desde que te conocí, mis días son mucho más bonitos.<br>
+                <b>U</b>nica en el mundo, así eres para mí.<br>
+                <b>M</b>i momento favorito es cuando hablo contigo.<br>
+                <b>I</b>luminas mi vida con esa sonrisa tan linda que tienes.<br><br><br>
+                Te quiero mucho.❤
+            </div>
+            
+
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const finalMessage = document.getElementById('finalMessage');
+        const container = document.getElementById('container');
+        const questionText = document.getElementById('questionText');
+        const blockButtons = document.getElementById('blockButtons');
+        const flowerVisuals = document.getElementById('flowerVisuals');
+        
+        
+        const letterBtn = document.getElementById('letterBtn');
+        const letterModal = document.getElementById('letterModal');
+        const closeLetter = document.getElementById('closeLetter');
+
+        
+        const flowerImages = ['flor1.png', 'flor2.png', 'flor3.png', 'flor4.png'];
+
+        
+        function moverBotonNo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            const randomX = Math.floor(Math.random() * (width - btnWidth - 40)) + 20;
+            const randomY = Math.floor(Math.random() * (height - btnHeight - 40)) + 20;
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.zIndex = '9999';
+        }
+
+       
+        function brotarFlores() {
+            flowerImages.forEach((imgSrc, index) => {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.classList.add('realistic-flower', `fl-${index + 1}`);
+                img.alt = 'flor';
+                img.onerror = function() { this.style.display = 'none'; };
+                flowerVisuals.appendChild(img);
+
+                setTimeout(() => {
+                    img.classList.add('grow');
+                }, index * 180);
+            });
+        }
+
+        
+        noBtn.addEventListener('click', function(event) { event.preventDefault(); moverBotonNo(); });
+        noBtn.addEventListener('mouseover', moverBotonNo);
+
+        
+        yesBtn.addEventListener('click', function() {
+            questionText.style.display = 'none';
+            blockButtons.style.display = 'none';
+            noBtn.style.display = 'none';
+            finalMessage.style.display = 'block';
+            container.style.borderColor = '#ff4757';
+            brotarFlores();
+        });
+
+        
+        letterBtn.addEventListener('click', function() {
+            letterModal.classList.add('show');
+        });
+
+        closeLetter.addEventListener('click', function() {
+            letterModal.classList.remove('show');
+        });
+    </script>
+    
+</body>
+</html>
